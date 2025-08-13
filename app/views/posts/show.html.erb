@@ -1,6 +1,6 @@
 <h1>文章詳細</h1>
 <p>標題：<%= @post.title %></p>
-<p>內容：<%= @post.content %></p>
+<div>內容：<%= @post.content %></div>
 <% if logged_in? && @post.user_id == current_user.id %>
   <%= link_to "編輯", edit_post_path(@post), class: "btn btn-primary" %>
   <%= link_to "刪除", post_path(@post), data: { turbo_method: :delete, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %>

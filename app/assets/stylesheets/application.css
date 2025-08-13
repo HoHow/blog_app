@@ -8,3 +8,6 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Action Text/Trix styles */
+@import "trix/dist/trix.css";
