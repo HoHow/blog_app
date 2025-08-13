@@ -1,12 +1,9 @@
 Rails.application.routes.draw do
-  get "posts/index"
-  get "posts/show"
-  get "posts/new"
-  get "posts/create"
-  get "posts/edit"
-  get "posts/update"
-  get "posts/destroy"
   resources :posts
+  resources :users, only: [:new, :create]
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
   root "posts#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

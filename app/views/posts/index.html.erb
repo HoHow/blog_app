@@ -14,7 +14,7 @@
         <td><%= post.title %></td>
         <td><%= post.content %></td>
         <td><%= link_to "編輯", edit_post_path(post), class: "btn btn-primary" %></td>
-        <td><%= link_to "刪除", post_path(post), method: :delete, data: { confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %></td>
+        <td><%= link_to "刪除", post_path(post), data: { turbo_method: :delete, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
