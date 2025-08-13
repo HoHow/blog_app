@@ -1,5 +1,8 @@
 class PostsController < ApplicationController
+  # 設定文章作者
+  before_action :require_login, except: [:index, :show]
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_owner!, only: [:edit, :update, :destroy]
   def index
     @posts = Post.all.order(created_at: :desc)
   end
@@ -12,7 +15,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(post_params)
+    @post = current_user.posts.build(post_params)
     if @post.save
       redirect_to @post, notice: "文章建立成功"
     else
@@ -43,5 +46,9 @@ class PostsController < ApplicationController
   def post_params
     params.require(:post).permit(:title, :content)
   end
-  
+  def authorize_owner!
+    return if @post.user_id == current_user&.id
+    redirect_to posts_path, alert: "無權限進行此操作"
+  end
+
 end

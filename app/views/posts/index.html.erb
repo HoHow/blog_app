@@ -1,5 +1,7 @@
 <h1>文章列表</h1>
-<%= link_to "新增文章", new_post_path, class: "btn btn-primary" %>
+<% if logged_in? %>
+  <%= link_to "新增文章", new_post_path, class: "btn btn-primary" %>
+<% end %>
 <table class="table">
   <thead>
     <tr>
@@ -13,8 +15,13 @@
       <tr>
         <td><%= post.title %></td>
         <td><%= post.content %></td>
-        <td><%= link_to "編輯", edit_post_path(post), class: "btn btn-primary" %></td>
-        <td><%= link_to "刪除", post_path(post), data: { turbo_method: :delete, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %></td>
+        <% if logged_in? && post.user_id == current_user.id %>
+          <td><%= link_to "編輯", edit_post_path(post), class: "btn btn-primary" %></td>
+          <td><%= link_to "刪除", post_path(post), data: { turbo_method: :delete, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

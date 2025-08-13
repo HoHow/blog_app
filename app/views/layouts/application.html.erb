@@ -23,6 +23,19 @@
   </head>
 
   <body>
+    <% if logged_in? %>
+      <%= link_to "登出", logout_path, data: { turbo_method: :delete } %>
+    <% else %>
+      <%= link_to "登入", login_path %>
+      <%= link_to "註冊", new_user_path %>
+    <% end %>
+    <hr>
+    <% if flash[:alert].present? %>
+      <%= javascript_tag nonce: true do %>
+        alert("<%= j flash[:alert] %>");
+      <% end %>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>

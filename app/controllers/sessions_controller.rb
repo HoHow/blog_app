@@ -1,17 +1,27 @@
 class SessionsController < ApplicationController
   def new
-
+    @user = User.new
   end
 
   def create
-    user = User.find_by(username: params[:username])
-    if user&.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect_to posts_path, notice: "登入成功"
-    else
-      flash.now[:alert] = "登入失敗"
+    username = params.dig(:user, :username) || params[:username]
+    password = params.dig(:user, :password) || params[:password]
+    user = User.find_by(username: username)
+
+    if user.nil?
+      flash.now[:alert] = "查無使用者"
       render :new
+      return
     end
+
+    unless user.authenticate(password)
+      flash.now[:alert] = "密碼錯誤"
+      render :new
+      return
+    end
+
+    session[:user_id] = user.id
+    redirect_to posts_path, notice: "登入成功"
   end
 
   def destroy
