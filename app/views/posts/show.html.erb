@@ -1,0 +1,6 @@
+<h1>文章詳細</h1>
+<p>標題：<%= @post.title %></p>
+<p>內容：<%= @post.content %></p>
+<%= link_to "編輯", edit_post_path(@post), class: "btn btn-primary" %>
+<%= link_to "刪除", post_path(@post), method: :delete, data: { confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %>
+<%= link_to "回到列表", posts_path, class: "btn btn-secondary" %>

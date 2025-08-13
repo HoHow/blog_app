@@ -1,0 +1,13 @@
+<h1>編輯文章</h1>
+<%= form_for @post do |f| %>
+  <div class="form-group">
+    <%= f.label :title, "標題" %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :content, "內容" %>
+    <%= f.text_area :content, class: "form-control" %>
+  </div>
+  <%= f.submit "更新", class: "btn btn-primary" %>
+<% end %>
+<%= link_to "回到列表", posts_path, class: "btn btn-secondary" %>
