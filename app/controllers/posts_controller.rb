@@ -1,11 +1,17 @@
 class PostsController < ApplicationController
   # 設定文章作者
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [:public, :show]
   before_action :set_post, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :delete, :restore]
   before_action :authorize_owner!, only: [:edit, :update, :destroy, :publish, :unpublish, :delete, :restore]
   
+  # 公用文章頁面（只顯示已發布的文章）
+  def public
+    @posts = Post.published.order(created_at: :desc)
+  end
+  
+  # 個人文章列表（需要登入）
   def index
-    @posts = Post.active.order(created_at: :desc)
+    @posts = current_user.posts.active.order(created_at: :desc)
   end
 
   def show

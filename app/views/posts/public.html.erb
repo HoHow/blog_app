@@ -1,0 +1,36 @@
+<h1>文章列表</h1>
+<% if logged_in? %>
+  <%= link_to "新增文章", new_post_path, class: "btn btn-primary" %>
+  <%= link_to "我的文章", posts_path, class: "btn btn-secondary" %>
+<% end %>
+
+<% if @posts.any? %>
+  <div class="posts-grid">
+    <% @posts.each do |post| %>
+      <div class="post-card">
+        <div class="post-header">
+          <h3 class="post-title">
+            <%= link_to post.title, post_path(post), class: "post-link" %>
+          </h3>
+          <span class="post-author">作者：<%= post.user.username %></span>
+        </div>
+        <div class="post-content">
+          <%= truncate(post.content.to_plain_text, length: 200) %>
+        </div>
+        <div class="post-footer">
+          <span class="post-date">發布時間：<%= post.updated_at.strftime("%Y-%m-%d %H:%M") %></span>
+          <span class="badge bg-success">已發布</span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="no-posts">
+    <p>目前還沒有已發布的文章。</p>
+    <% if logged_in? %>
+      <p><%= link_to "立即發布第一篇文章", new_post_path, class: "btn btn-primary" %></p>
+    <% else %>
+      <p><%= link_to "登入", login_path, class: "btn btn-primary" %> 來發布文章</p>
+    <% end %>
+  </div>
+<% end %>
