@@ -35,7 +35,7 @@
     const form = document.querySelector("form");
     if (!form) return;
     const titleInput = form.querySelector('input[name="post[title]"]');
-    const contentInput = form.querySelector('input[name="post[content]"]');
+    const contentEditor = form.querySelector('trix-editor');
     const modal = document.getElementById('preview-modal');
     const openBtn = document.getElementById('open-preview');
     const closeBtn = document.getElementById('close-preview');
@@ -46,7 +46,7 @@
 
     function openModal() {
       if (previewTitle && titleInput) previewTitle.textContent = titleInput.value || "";
-      if (previewContent && contentInput) previewContent.innerHTML = contentInput.value || "";
+      if (previewContent && contentEditor) previewContent.innerHTML = contentEditor.value || "";
       modal.style.display = 'flex';
       modal.setAttribute('aria-hidden', 'false');
     }
