@@ -1,10 +1,11 @@
 class PostsController < ApplicationController
   # 設定文章作者
   before_action :require_login, except: [:index, :show]
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_owner!, only: [:edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :delete, :restore]
+  before_action :authorize_owner!, only: [:edit, :update, :destroy, :publish, :unpublish, :delete, :restore]
+  
   def index
-    @posts = Post.all.order(created_at: :desc)
+    @posts = Post.active.order(created_at: :desc)
   end
 
   def show
@@ -35,8 +36,43 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    @post.destroy
-    redirect_to posts_path, notice: "文章已刪除"
+    if @post.delete!
+      redirect_to posts_path, notice: "文章已刪除"
+    else
+      redirect_to @post, alert: "無法刪除文章"
+    end
+  end
+  
+  def publish
+    if @post.publish!
+      redirect_to @post, notice: "文章已發布"
+    else
+      redirect_to @post, alert: "無法發布文章"
+    end
+  end
+  
+  def unpublish
+    if @post.unpublish!
+      redirect_to @post, notice: "文章已取消發布"
+    else
+      redirect_to @post, alert: "無法取消發布文章"
+    end
+  end
+  
+  def delete
+    if @post.delete!
+      redirect_to posts_path, notice: "文章已刪除"
+    else
+      redirect_to @post, alert: "無法刪除文章"
+    end
+  end
+  
+  def restore
+    if @post.restore!
+      redirect_to @post, notice: "文章已恢復"
+    else
+      redirect_to @post, alert: "無法恢復文章"
+    end
   end
 
   private

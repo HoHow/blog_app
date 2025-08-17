@@ -10,9 +10,9 @@
   </div>
   <%= f.submit "更新", class: "btn btn-primary" %>
 <% end %>
-<%= link_to "回到列表", posts_path, class: "btn btn-secondary" %>
 
 <button type="button" id="open-preview" class="btn btn-secondary" style="margin-top:12px;">預覽</button>
+<%= link_to "回到列表", posts_path, class: "btn btn-secondary" %>
 
 <div id="preview-modal" class="modal" aria-hidden="true" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; align-items:center; justify-content:center;">
   <div class="modal-dialog" style="background:#fff; max-width:800px; width:90%; border-radius:8px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.2);">
@@ -29,37 +29,3 @@
     </div>
   </div>
 </div>
-
-<%= javascript_tag nonce: true do %>
-  document.addEventListener("DOMContentLoaded", function() {
-    const form = document.querySelector("form");
-    if (!form) return;
-    const titleInput = form.querySelector('input[name="post[title]"]');
-    const contentEditor = form.querySelector('trix-editor');
-    const modal = document.getElementById('preview-modal');
-    const openBtn = document.getElementById('open-preview');
-    const closeBtn = document.getElementById('close-preview');
-    const closeBtn2 = document.getElementById('close-preview-2');
-    const dialog = modal.querySelector('.modal-dialog');
-    const previewTitle = modal.querySelector('.preview-title');
-    const previewContent = modal.querySelector('.preview-content');
-
-    function openModal() {
-      if (previewTitle && titleInput) previewTitle.textContent = titleInput.value || "";
-      if (previewContent && contentEditor) previewContent.innerHTML = contentEditor.value || "";
-      modal.style.display = 'flex';
-      modal.setAttribute('aria-hidden', 'false');
-    }
-    function closeModal() {
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden', 'true');
-    }
-
-    if (openBtn) openBtn.addEventListener('click', openModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    if (closeBtn2) closeBtn2.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) {
-      if (!dialog.contains(e.target)) closeModal();
-    });
-  });
-<% end %>

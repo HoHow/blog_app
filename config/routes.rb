@@ -2,7 +2,14 @@ Rails.application.routes.draw do
   get "sessions/new"
   get "sessions/create"
   get "sessions/destroy"
-  resources :posts
+  resources :posts do
+    member do
+      patch :publish
+      patch :unpublish
+      patch :delete
+      patch :restore
+    end
+  end
   resources :users, only: [:new, :create]
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"

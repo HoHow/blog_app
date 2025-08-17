@@ -7,6 +7,7 @@
     <tr>
       <th>標題</th>
       <th>內容</th>
+      <th>狀態</th>
       <th>操作</th>
     </tr>
   </thead>
@@ -15,13 +16,40 @@
       <tr>
         <td><%= post.title %></td>
         <td><%= post.content %></td>
-        <% if logged_in? && post.user_id == current_user.id %>
-          <td><%= link_to "編輯", edit_post_path(post), class: "btn btn-primary" %></td>
-          <td><%= link_to "刪除", post_path(post), data: { turbo_method: :delete, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %></td>
-        <% else %>
-          <td></td>
-          <td></td>
-        <% end %>
+        <td>
+          <span class="badge <%= post.status == 'published' ? 'bg-success' : (post.status == 'draft' ? 'bg-warning' : 'bg-danger') %>">
+            <%= case post.status
+                when 'published'
+                  '已發布'
+                when 'draft'
+                  '草稿'
+                when 'deleted'
+                  '已刪除'
+                else
+                  post.status
+                end %>
+          </span>
+        </td>
+        <td>
+          <% if logged_in? && post.user_id == current_user.id %>
+            <%= link_to "查看", post_path(post), class: "btn btn-info btn-sm" %>
+            <%= link_to "編輯", edit_post_path(post), class: "btn btn-primary btn-sm" %>
+            
+            <% if post.draft? %>
+              <%= link_to "發布", publish_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要發布嗎？" }, class: "btn btn-success btn-sm" %>
+            <% elsif post.published? %>
+              <%= link_to "取消發布", unpublish_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要取消發布嗎？" }, class: "btn btn-warning btn-sm" %>
+            <% end %>
+            
+            <% unless post.deleted? %>
+              <%= link_to "刪除", delete_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger btn-sm" %>
+            <% else %>
+              <%= link_to "恢復", restore_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要恢復嗎？" }, class: "btn btn-secondary btn-sm" %>
+            <% end %>
+          <% else %>
+            <%= link_to "查看", post_path(post), class: "btn btn-info btn-sm" %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
