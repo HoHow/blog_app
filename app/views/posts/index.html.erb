@@ -1,4 +1,9 @@
 <h1>我的文章</h1>
+<div class="page-actions">
+  <%= link_to "新增文章", new_post_path, class: "btn btn-primary" %>
+  <%= link_to "所有文章", public_posts_path, class: "btn btn-secondary" %>
+</div>
+
 <% if @posts.any? %>
   <table class="table">
     <thead>
