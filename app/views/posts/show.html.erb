@@ -42,9 +42,3 @@
   <% end %>
 </div>
 
-<div class="navigation-links">
-  <% if logged_in? %>
-    <%= link_to "我的文章", posts_path, class: "btn btn-secondary" %>
-  <% end %>
-  <%= link_to "所有文章", public_posts_path, class: "btn btn-secondary" %>
-</div>

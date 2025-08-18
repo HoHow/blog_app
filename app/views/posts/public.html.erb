@@ -1,11 +1,4 @@
 <h1>文章列表</h1>
-<% if logged_in? %>
-  <div class="page-actions">
-    <%= link_to "新增文章", new_post_path, class: "btn btn-primary" %>
-    <%= link_to "我的文章", posts_path, class: "btn btn-secondary" %>
-  </div>
-<% end %>
-
 <% if @posts.any? %>
   <div class="posts-grid">
     <% @posts.each do |post| %>

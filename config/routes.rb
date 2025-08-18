@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "public", to: "posts#public", as: :public_posts
   
   resources :posts do
+    
     member do
       patch :publish
       patch :unpublish
