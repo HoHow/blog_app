@@ -6,12 +6,14 @@ class PostsController < ApplicationController
   
   # 公用文章頁面（只顯示已發布的文章）
   def public
-    @posts = Post.published.order(created_at: :desc)
+    @q = Post.published.ransack(params[:q])
+    @posts = @q.result(distinct: true).order(created_at: :desc)
   end
   
   # 個人文章列表（需要登入）
   def index
-    @posts = current_user.posts.active.order(created_at: :desc)
+    @q = current_user.posts.active.ransack(params[:q])
+    @posts = @q.result(distinct: true).order(created_at: :desc)
   end
 
   def show

@@ -30,4 +30,14 @@ class Post < ApplicationRecord
   scope :active, -> { where.not(status: 'deleted') }
   scope :published, -> { where(status: 'published') }
   scope :drafts, -> { where(status: 'draft') }
+  
+  # Ransack 可搜尋的屬性
+  def self.ransackable_attributes(auth_object = nil)
+    ["title", "content", "status", "created_at", "updated_at"]
+  end
+  
+  # Ransack 可搜尋的關聯
+  def self.ransackable_associations(auth_object = nil)
+    ["user", "rich_text_content"]
+  end
 end

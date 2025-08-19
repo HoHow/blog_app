@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# 建立資料庫
+echo "Creating databases..."
+rails db:create
+
+# 執行遷移
+echo "Running migrations..."
+rails db:migrate
+
+# 載入種子資料（如果有的話）
+echo "Loading seed data..."
+rails db:seed
+
+echo "Database setup complete!"

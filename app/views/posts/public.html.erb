@@ -1,4 +1,16 @@
 <h1>文章列表</h1>
+
+<!-- 搜尋表單 -->
+<%= simple_search_form_for_posts %>
+
+<!-- 搜尋結果統計 -->
+<% if params[:q].present? %>
+  <div class="alert alert-info">
+    <%= search_results_count %>
+    <%= clear_search_link %>
+  </div>
+<% end %>
+
 <% if @posts.any? %>
   <div class="posts-grid">
     <% @posts.each do |post| %>

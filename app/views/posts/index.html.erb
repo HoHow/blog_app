@@ -1,4 +1,16 @@
 <h1>我的文章</h1>
+
+<!-- 搜尋表單 -->
+<%= search_form_for_posts %>
+
+<!-- 搜尋結果統計 -->
+<% if params[:q].present? %>
+  <div class="alert alert-info">
+    <%= search_results_count %>
+    <%= clear_search_link %>
+  </div>
+<% end %>
+
 <% if @posts.any? %>
   <table class="table">
     <thead>
