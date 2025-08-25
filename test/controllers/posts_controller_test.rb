@@ -2,37 +2,15 @@ require "test_helper"
 
 class PostsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    get posts_index_url
+    get posts_url
     assert_response :success
   end
 
   test "should get show" do
-    get posts_show_url
-    assert_response :success
-  end
-
-  test "should get new" do
-    get posts_new_url
-    assert_response :success
-  end
-
-  test "should get create" do
-    get posts_create_url
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get posts_edit_url
-    assert_response :success
-  end
-
-  test "should get update" do
-    get posts_update_url
-    assert_response :success
-  end
-
-  test "should get destroy" do
-    get posts_destroy_url
+    # 需要一個已發布的文章來測試
+    post = posts(:one)
+    post.update(status: 'published')
+    get post_url(post)
     assert_response :success
   end
 end

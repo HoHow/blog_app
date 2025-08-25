@@ -1,7 +1,24 @@
-<h1>我的文章</h1>
+<h1>文章列表</h1>
+
+<!-- 標籤雲 -->
+<% if @all_tags.any? %>
+  <div class="tag-cloud mb-4">
+    <h5>熱門標籤：</h5>
+    <% @all_tags.each do |tag| %>
+      <%= link_to tag.name, posts_path(tag: tag.name), class: "badge bg-secondary me-1 mb-1 text-decoration-none", style: "font-size: #{[tag.count * 2 + 8, 16].min}px;" %>
+      <span class="text-muted small">(<%= tag.count %>)</span>
+    <% end %>
+    <% if params[:tag].present? %>
+      <div class="mt-2">
+        <span class="text-info">目前篩選標籤：<strong><%= params[:tag] %></strong></span>
+        <%= link_to "清除標籤篩選", posts_path, class: "btn btn-sm btn-outline-secondary ms-2" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 <!-- 搜尋表單 -->
-<%= search_form_for_posts %>
+<%= simple_search_form_for_posts %>
 
 <!-- 搜尋結果統計 -->
 <% if params[:q].present? %>
@@ -12,57 +29,42 @@
 <% end %>
 
 <% if @posts.any? %>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>標題</th>
-        <th>內容</th>
-        <th>狀態</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @posts.each do |post| %>
-        <tr>
-          <td><%= post.title %></td>
-          <td><%= truncate(post.content.to_plain_text, length: 100) %></td>
-          <td>
-            <span class="badge <%= post.status == 'published' ? 'bg-success' : (post.status == 'draft' ? 'bg-warning' : 'bg-danger') %>">
-              <%= case post.status
-                  when 'published'
-                    '已發布'
-                  when 'draft'
-                    '草稿'
-                  when 'deleted'
-                    '已刪除'
-                  else
-                    post.status
-                  end %>
-            </span>
-          </td>
-          <td>
-            <%= link_to "查看", post_path(post), class: "btn btn-info btn-sm" %>
-            <%= link_to "編輯", edit_post_path(post), class: "btn btn-primary btn-sm" %>
-            
-            <% if post.draft? %>
-              <%= link_to "發布", publish_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要發布嗎？" }, class: "btn btn-success btn-sm" %>
-            <% elsif post.published? %>
-              <%= link_to "取消發布", unpublish_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要取消發布嗎？" }, class: "btn btn-warning btn-sm" %>
+  <div class="posts-grid">
+    <% @posts.each do |post| %>
+      <div class="post-card">
+        <div class="post-header">
+          <h3 class="post-title">
+            <%= link_to post.title, post_path(post), class: "post-link" %>
+          </h3>
+          <span class="post-author">作者：<%= post.user.username %></span>
+        </div>
+        <div class="post-content">
+          <%= truncate(post.content.to_plain_text, length: 200) %>
+        </div>
+        
+        <!-- 文章標籤 -->
+        <% if post.tag_list.any? %>
+          <div class="post-tags mb-2">
+            <% post.tag_list.each do |tag| %>
+              <%= link_to tag, posts_path(tag: tag), class: "badge bg-light text-dark me-1 text-decoration-none" %>
             <% end %>
-            
-            <% unless post.deleted? %>
-              <%= link_to "刪除", delete_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger btn-sm" %>
-            <% else %>
-              <%= link_to "恢復", restore_post_path(post), data: { turbo_method: :patch, turbo_confirm: "確定要恢復嗎？" }, class: "btn btn-secondary btn-sm" %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+          </div>
+        <% end %>
+        
+        <div class="post-footer">
+          <span class="post-date">發布時間：<%= post.updated_at.strftime("%Y-%m-%d %H:%M") %></span>
+          <span class="badge bg-success">已發布</span>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% else %>
   <div class="no-posts">
-    <p>您還沒有任何文章。</p>
-    <p><%= link_to "立即建立第一篇文章", new_post_path, class: "btn btn-primary" %></p>
+    <p>目前還沒有已發布的文章。</p>
+    <% if logged_in? %>
+      <p><%= link_to "立即發布第一篇文章", new_users_post_path, class: "btn btn-primary" %></p>
+    <% else %>
+      <p><%= link_to "登入", login_path, class: "btn btn-primary" %> 來發布文章</p>
+    <% end %>
   </div>
 <% end %>

@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
     end
 
     session[:user_id] = user.id
-    redirect_to posts_path, notice: "登入成功"
+    redirect_to root_path, notice: "登入成功"
   end
 
   def destroy

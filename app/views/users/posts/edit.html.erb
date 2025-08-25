@@ -8,11 +8,16 @@
     <%= f.label :content, "內容" %>
     <%= f.rich_text_area :content, class: "form-control" %>
   </div>
+  <div class="form-group">
+    <%= f.label :tag_list, "標籤" %>
+    <%= f.text_field :tag_list, value: @post.tag_list&.join(', ') || '', class: "form-control", placeholder: "請用逗號分隔標籤，例如：Rails, Ruby, 程式設計" %>
+    <small class="form-text text-muted">請用逗號分隔多個標籤</small>
+  </div>
   <%= f.submit "更新", class: "btn btn-primary" %>
 <% end %>
 
 <button type="button" id="open-preview" class="btn btn-secondary" style="margin-top:12px;">預覽</button>
-<%= link_to "回到列表", posts_path, class: "btn btn-secondary" %>
+<%= link_to "回到列表", users_posts_path, class: "btn btn-secondary" %>
 
 <div id="preview-modal" class="modal" aria-hidden="true" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; align-items:center; justify-content:center;">
   <div class="modal-dialog" style="background:#fff; max-width:800px; width:90%; border-radius:8px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.2);">

@@ -2,7 +2,7 @@ module PostsHelper
   # 搜尋表單輔助方法（管理員用）
   def search_form_for_posts
     content_tag :div, class: "search-form mb-4" do
-      form_with url: request.path, method: :get, local: true, class: "row g-3" do |form|
+      form_with url: users_posts_path, method: :get, local: true, class: "row g-3" do |form|
         concat(
           content_tag(:div, class: "col-md-4") do
             form.text_field :q_title_cont, 

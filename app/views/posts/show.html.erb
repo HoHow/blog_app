@@ -17,6 +17,16 @@
             end %>
       </span>
     </div>
+    
+    <!-- 標籤顯示 -->
+    <% if @post.tag_list.any? %>
+      <div class="post-tags mt-2">
+        <strong>標籤：</strong>
+        <% @post.tag_list.each do |tag| %>
+          <%= link_to tag, posts_path(tag: tag), class: "badge bg-primary text-white me-1 text-decoration-none" %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
   
   <div class="post-content">
@@ -25,18 +35,18 @@
 
   <% if logged_in? && @post.user_id == current_user.id %>
     <div class="post-actions">
-      <%= link_to "編輯", edit_post_path(@post), class: "btn btn-primary" %>
+      <%= link_to "編輯", edit_users_post_path(@post), class: "btn btn-primary" %>
       
       <% if @post.draft? %>
-        <%= link_to "發布", publish_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要發布嗎？" }, class: "btn btn-success" %>
+        <%= link_to "發布", publish_users_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要發布嗎？" }, class: "btn btn-success" %>
       <% elsif @post.published? %>
-        <%= link_to "取消發布", unpublish_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要取消發布嗎？" }, class: "btn btn-warning" %>
+        <%= link_to "取消發布", unpublish_users_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要取消發布嗎？" }, class: "btn btn-warning" %>
       <% end %>
       
       <% unless @post.deleted? %>
-        <%= link_to "刪除", delete_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %>
+        <%= link_to "刪除", delete_users_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要刪除嗎？" }, class: "btn btn-danger" %>
       <% else %>
-        <%= link_to "恢復", restore_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要恢復嗎？" }, class: "btn btn-secondary" %>
+        <%= link_to "恢復", restore_users_post_path(@post), data: { turbo_method: :patch, turbo_confirm: "確定要恢復嗎？" }, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
