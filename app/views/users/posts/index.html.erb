@@ -29,7 +29,7 @@
           <td>
             <% if post.tag_list.any? %>
               <% post.tag_list.each do |tag| %>
-                <%= link_to tag, users_posts_path(tag: tag), class: "badge bg-light text-dark me-1 text-decoration-none" %>
+                <%= link_to tag, users_posts_path(tag: tag, q: params[:q]&.permit!), class: "badge bg-light text-dark me-1 text-decoration-none" %>
               <% end %>
             <% else %>
               <span class="text-muted">無標籤</span>

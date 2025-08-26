@@ -1,70 +1,148 @@
-<h1>文章列表</h1>
+<!-- Hero Section -->
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <i class="fas fa-book-open"></i>
+      探索精彩文章
+    </h1>
+    <p class="hero-subtitle">發現來自優秀作者的獨特觀點和精彩內容</p>
+  </div>
+</div>
 
 <!-- 標籤雲 -->
 <% if @all_tags.any? %>
-  <div class="tag-cloud mb-4">
-    <h5>熱門標籤：</h5>
-    <% @all_tags.each do |tag| %>
-      <%= link_to tag.name, posts_path(tag: tag.name), class: "badge bg-secondary me-1 mb-1 text-decoration-none", style: "font-size: #{[tag.count * 2 + 8, 16].min}px;" %>
-      <span class="text-muted small">(<%= tag.count %>)</span>
-    <% end %>
+  <div class="tag-cloud-section">
+    <div class="tag-cloud-header">
+      <h3><i class="fas fa-tags"></i> 熱門標籤</h3>
+      <p>點擊標籤探索相關文章</p>
+    </div>
+    <div class="tag-cloud">
+      <% @all_tags.each do |tag| %>
+        <%= link_to posts_path(tag: tag.name, q: params[:q]&.permit!), 
+            class: "tag-item #{'active' if params[:tag] == tag.name}", 
+            style: "font-size: #{[tag.count * 2 + 12, 18].min}px;" do %>
+          <span class="tag-name"><%= tag.name %></span>
+          <span class="tag-count">(<%= tag.count %>)</span>
+        <% end %>
+      <% end %>
+    </div>
     <% if params[:tag].present? %>
-      <div class="mt-2">
-        <span class="text-info">目前篩選標籤：<strong><%= params[:tag] %></strong></span>
-        <%= link_to "清除標籤篩選", posts_path, class: "btn btn-sm btn-outline-secondary ms-2" %>
+      <div class="active-filter">
+        <span class="filter-label">
+          <i class="fas fa-filter"></i>
+          目前篩選：<strong><%= params[:tag] %></strong>
+        </span>
+        <%= link_to posts_path(q: params[:q]&.permit!), class: "clear-filter-btn" do %>
+          <i class="fas fa-times"></i> 清除篩選
+        <% end %>
       </div>
     <% end %>
   </div>
 <% end %>
 
-<!-- 搜尋表單 -->
-<%= simple_search_form_for_posts %>
+<!-- 搜尋區域 -->
+<div class="search-section">
+  <div class="search-container">
+    <%= simple_search_form_for_posts %>
+  </div>
+</div>
 
 <!-- 搜尋結果統計 -->
 <% if params[:q].present? %>
-  <div class="alert alert-info">
-    <%= search_results_count %>
-    <%= clear_search_link %>
+  <div class="search-results-info">
+    <div class="search-stats">
+      <i class="fas fa-search"></i>
+      <%= search_results_count %>
+    </div>
+    <div class="search-actions">
+      <%= clear_search_link %>
+    </div>
   </div>
 <% end %>
 
+<!-- 文章列表 -->
 <% if @posts.any? %>
-  <div class="posts-grid">
-    <% @posts.each do |post| %>
-      <div class="post-card">
-        <div class="post-header">
-          <h3 class="post-title">
-            <%= link_to post.title, post_path(post), class: "post-link" %>
-          </h3>
-          <span class="post-author">作者：<%= post.user.username %></span>
-        </div>
-        <div class="post-content">
-          <%= truncate(post.content.to_plain_text, length: 200) %>
-        </div>
-        
-        <!-- 文章標籤 -->
-        <% if post.tag_list.any? %>
-          <div class="post-tags mb-2">
-            <% post.tag_list.each do |tag| %>
-              <%= link_to tag, posts_path(tag: tag), class: "badge bg-light text-dark me-1 text-decoration-none" %>
+  <div class="posts-container">
+    <div class="posts-header">
+      <h2 class="posts-title">
+        <i class="fas fa-newspaper"></i>
+        <%= params[:tag].present? ? "標籤：#{params[:tag]}" : "最新文章" %>
+        <span class="posts-count">(<%= @posts.count %>)</span>
+      </h2>
+    </div>
+    
+    <div class="posts-grid">
+      <% @posts.each do |post| %>
+        <article class="post-card">
+          <div class="post-card-header">
+            <div class="post-meta">
+              <div class="post-author">
+                <i class="fas fa-user-circle"></i>
+                <%= post.user.username %>
+              </div>
+              <div class="post-date">
+                <i class="fas fa-calendar-alt"></i>
+                <%= post.updated_at.strftime("%Y年%m月%d日") %>
+              </div>
+            </div>
+            <div class="post-status">
+              <span class="status-badge published">
+                <i class="fas fa-check-circle"></i>
+                已發布
+              </span>
+            </div>
+          </div>
+          
+          <div class="post-card-body">
+            <h3 class="post-title">
+              <%= link_to post.title, post_path(post), class: "post-link" %>
+            </h3>
+            <div class="post-excerpt">
+              <%= truncate(post.content.to_plain_text, length: 150) %>
+            </div>
+          </div>
+          
+          <!-- 文章標籤 -->
+          <% if post.tag_list.any? %>
+            <div class="post-tags">
+              <% post.tag_list.each do |tag| %>
+                <%= link_to posts_path(tag: tag, q: params[:q]&.permit!), class: "post-tag" do %>
+                  <i class="fas fa-tag"></i>
+                  <%= tag %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <div class="post-card-footer">
+            <%= link_to post_path(post), class: "read-more-btn" do %>
+              閱讀全文
+              <i class="fas fa-arrow-right"></i>
             <% end %>
           </div>
-        <% end %>
-        
-        <div class="post-footer">
-          <span class="post-date">發布時間：<%= post.updated_at.strftime("%Y-%m-%d %H:%M") %></span>
-          <span class="badge bg-success">已發布</span>
-        </div>
-      </div>
-    <% end %>
+        </article>
+      <% end %>
+    </div>
   </div>
 <% else %>
-  <div class="no-posts">
-    <p>目前還沒有已發布的文章。</p>
-    <% if logged_in? %>
-      <p><%= link_to "立即發布第一篇文章", new_users_post_path, class: "btn btn-primary" %></p>
-    <% else %>
-      <p><%= link_to "登入", login_path, class: "btn btn-primary" %> 來發布文章</p>
-    <% end %>
+  <div class="empty-state">
+    <div class="empty-state-icon">
+      <i class="fas fa-newspaper"></i>
+    </div>
+    <h3 class="empty-state-title">目前還沒有已發布的文章</h3>
+    <p class="empty-state-description">成為第一個分享精彩內容的作者吧！</p>
+    <div class="empty-state-actions">
+      <% if logged_in? %>
+        <%= link_to new_users_post_path, class: "btn btn-primary btn-lg" do %>
+          <i class="fas fa-plus"></i>
+          立即發布第一篇文章
+        <% end %>
+      <% else %>
+        <%= link_to login_path, class: "btn btn-primary btn-lg" do %>
+          <i class="fas fa-sign-in-alt"></i>
+          登入發布文章
+        <% end %>
+      <% end %>
+    </div>
   </div>
 <% end %>
