@@ -1,5 +1,5 @@
 pin "application"
 pin "@hotwired/turbo-rails", to: "turbo.min.js", preload: true
+pin "@hotwired/stimulus", to: "stimulus.min.js", preload: true
 pin "trix"
 pin "@rails/actiontext", to: "actiontext.esm.js"
-pin "preview"

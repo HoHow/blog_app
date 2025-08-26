@@ -14,6 +14,9 @@ gem "jbuilder"
 # Hotwire Turbo for method links, confirmations, and partial page updates
 gem "turbo-rails"
 
+# Stimulus for JavaScript controllers
+gem "stimulus-rails"
+
 # Use Importmap to load Turbo without a JS bundler
 gem "importmap-rails"
 
